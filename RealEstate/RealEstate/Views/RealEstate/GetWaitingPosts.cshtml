@@ -1,0 +1,52 @@
+﻿@using RealEstate.ViewModels
+@model List<RealEstate>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>E-Learning</title>
+    <style>
+        body {
+            overflow-x: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="all">
+        <h1 style="text-align:center;margin-top:50px;">Waiting Posts</h1>
+        <div class="realEstates">
+            <div class="content" style="margin-left:80px;">
+                @{
+                    @if (Model.Count > 0)
+                    {
+                        <div class="row row-cols-1 row-cols-lg-4 row-cols-md-2 row-cols-sm-1 g-2 ms-2 mt-5">
+                            @foreach (var item in Model)
+                            {
+                                <div class="card" style="width: 18rem;margin-right:40px;">
+                                    @if (item != null && item.MainImg != null)
+                                    {
+                                        var base64Img = Convert.ToBase64String(item.MainImg);
+                                        <img src="data:image/png;base64,@base64Img" class="card-img-top" style="height:200px;" alt="Image">
+                                    }
+                                    <div class="card-body">
+                                        <div style="height:150px;">
+                                            <h5 class="card-title" style="color:cadetblue">@item?.Title</h5>
+                                        </div>
+                                        <a class="btn btn-primary" asp-controller="RealEstate" asp-action="WaitingPost" asp-route-id="@item.Id" style="margin-left:90px;">View</a>
+                                    </div>
+                                </div>
+
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <h2 style="color:Red;margin-left:535px;margin-top:200px">No data available</h2>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</body>
+</html>

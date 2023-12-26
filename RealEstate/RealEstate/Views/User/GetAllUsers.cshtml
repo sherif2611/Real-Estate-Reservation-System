@@ -1,0 +1,49 @@
+﻿@using RealEstate.ViewModels
+@model List<Person>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>E-Learning</title>
+    <style>
+        body {
+            overflow-x: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="all">
+        <h1 style="text-align:center;margin-top:50px;">Users On The System</h1>
+        <div class="realEstates">
+            <div class="content" style="margin-left:80px;">
+                @{
+                    @if (Model.Count > 0)
+                    {
+                        <div class="row row-cols-1 row-cols-lg-4 row-cols-md-2 row-cols-sm-1 g-2 ms-2 mt-5">
+                            @foreach (var item in Model)
+                            {
+                                <div class="card" style="width: 18rem;margin-right:40px;">
+                                    <img src="~/imgs/User.jpeg" class="card-img-top" style="height:200px;" alt="Image">
+
+                                    <div class="card-body">
+                                        <h5 class="card-title">@item?.FName @item?.LName</h5>
+                                        <p class="card-text" style="color:black;font-weight:100;font-size:15px;">@item?.Email</p>
+                                        <a class="btn btn-primary" asp-controller="User" asp-action="Delete" asp-route-id="@item.Id" style="margin-left:90px;">Delete</a>
+                                    </div>
+                                </div>
+
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <h2 style="color:Red;margin-left:535px;margin-top:200px">No data available</h2>
+                    }
+
+                }
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,73 @@
+﻿@using RealEstate.ViewModels
+@model RealEstateViewModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>E-Learning</title>
+    <link rel="stylesheet" href="~/css/addRealEstate.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hedvig+Letters+Sans&family=Inter:wght@400;500&family=Lato&family=Libre+Franklin&family=Nunito+Sans:opsz,wght@6..12,500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <form method="post" asp-controller="RealEstate" asp-action="SaveUpdating" asp-route-id="@Model.Id" enctype="multipart/form-data">
+            <label>Real Estate Title</label>
+            <input type="text" asp-for="Title" value="@Model.Title"/><br />
+            <span asp-validation-for="Title" class="text-danger"></span>
+            <label>Area</label>
+            <input value="@Model.Area" type="number" asp-for="Area" placeholder="in meter" /><br />
+            <span asp-validation-for="Area" class="text-danger"></span>
+            <label>Address</label>
+            <input value="@Model.Address" type="text" asp-for="Address" placeholder="Including Governorate, City, and Street" /><br />
+            <span asp-validation-for="Address" class="text-danger"></span>
+            <label>Price</label>
+            <input value="@Model.Price" type="number" asp-for="Price" placeholder="Per day" /><br />
+            <span asp-validation-for="Price" class="text-danger"></span>
+            <label>Type of Real State</label>
+            <input value ="@Model.Category" type="text" asp-for="Category" placeholder="A floor in a building or a villa or a store, etc." /><br />
+            <span asp-validation-for="Category" class="text-danger"></span>
+            <label>Description</label>
+            <input value="@Model.Desc" type="text" asp-for="Desc" /><br />
+            <span asp-validation-for="Desc" class="text-danger"></span>
+            <label>New Credentail Img</label>
+            <input type="file" asp-for="Credentail" /><br />
+            <span asp-validation-for="Credentail" class="text-danger"></span>
+            <label>New Main Image</label>
+            <input type="file" asp-for="MainImg" /><br />
+            <span asp-validation-for="MainImg" class="text-danger"></span>
+            <label>Count of new images you want to upload, Old images will deleted directly after updating process</label>
+            <input asp-for="countOfImgs" type="number" id="imageCount" onchange="generateImageInputs()" />
+            <span asp-validation-for="countOfImgs" class="text-danger"></span>
+            <br />
+            <div id="additionalImages"></div>
+            <button type="submit">Update</button>
+        </form>
+    </div>
+
+    <script>
+        function generateImageInputs() {
+            var count = document.getElementById('imageCount').value;
+            var container = document.getElementById('additionalImages');
+            container.innerHTML = ""; // Clear previous inputs
+
+            for (var i = 1; i <= count; i++) {
+                var input = document.createElement('input');
+                input.type = 'file';
+                input.name = 'Imgs'; // Set the name to match the property name
+                container.appendChild(input);
+                container.appendChild(document.createElement('br'));
+            }
+        }
+
+        function validateForm() {
+            // You can add additional validation logic here if needed
+            return true;
+        }
+    </script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>

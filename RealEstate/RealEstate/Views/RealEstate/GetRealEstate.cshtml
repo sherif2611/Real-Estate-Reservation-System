@@ -1,0 +1,130 @@
+﻿@using RealEstate.ViewModels
+@model GetRealEstateViewModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Estate Details</title>
+    <link rel="stylesheet" href="~/css/RealEstate.css"/>
+</head>
+<body>
+
+    <div class="container">
+        @{
+            if (Model.userId == Model.userLoginId)
+            {
+                <h1 style="color:cadetblue;text-align:center;">Your Real Estate</h1>
+            }
+        }
+        @if (Model != null && Model.MainImg != null)
+        {
+            var base64Img = Convert.ToBase64String(Model.MainImg);
+            <img class="property-image" src="data:image/png;base64,@base64Img" alt="Real Estate Image" onclick="showImageViewer(this)">
+        }
+        <div class="property-details">
+            <h1 class="property-title">@Model.Title</h1>
+
+            <div class="property-info">
+                <p><strong>Address:</strong> @Model.Address</p>
+                <p><strong>Area:</strong> @Model.Area Meter</p>
+                <p><strong>Description:</strong> @Model.Desc</p>
+                <p><strong>Price per day:</strong> @Model.Price</p>
+            </div>
+            @if (Model.Available==true)
+            {
+                <p class="availability-text" style="color:green" id="availabilityText">Available</p>
+            }
+            else if (Model.userLoginId==Model.customerId)
+            {
+                <p class="availability-text" style="color:cadetblue" id="availabilityText">You already Reserve it</p>
+            }
+            else
+            {
+                <p class="availability-text" style="color:red" id="availabilityText">Not Available</p>
+            }
+            
+            @if (Model.Available&&Model.userLoginId!=Model.userReserveId&&Model.userLoginId!=Model.ownerId)
+            {
+                <form method="post" asp-controller="RealEstate" asp-action="SaveReverse" asp-route-id="@Model.Id">
+                    <label for="days" class="days-input">
+                        Number of Days:
+                        <input type="number" asp-for="@Model.NumberOfDays" id="days" min="1" value="1" oninput="updateTotalPrice()">
+                    </label>
+                    <button type="submit" class="reserve-button" onclick="reserveProperty()">
+                        Reserve Now
+                    </button>
+                </form>
+            }
+            @if ((Model.userLoginId==Model.ownerId&&Model.customerId!=-1)||Model.userLoginId==Model.customerId)
+            {
+                <form method="post" asp-action="Bill" asp-controller="RealEstate" asp-route-id="@Model.Id">
+                    <button type="submit" class="reserve-button" >
+                        Go To Bill
+                    </button>
+                </form>
+            }
+            <p class="total-price" id="totalPrice">Total Price: $@Model.Price</p>
+            
+        </div>
+
+        <div class="image-group">
+            @{
+                foreach(var item in Model.Imgs)
+                {
+                    var base64Img = Convert.ToBase64String(item.Img);
+                    <img src="data:image/png;base64,@base64Img" alt="Image " onclick="showImageViewer(this)">
+                }
+            }
+        </div>
+        @if (Model.userLoginId == Model.ownerId)
+        {
+            <p style="margin-top:10px;margin-bottom:10px;">Credentail Image</p>
+            var base64Img = Convert.ToBase64String(Model.Credintial);
+            <img src="data:image/png;base64,@base64Img" alt="Image " onclick="showImageViewer(this)">
+            <form method="post" asp-action="Update" asp-controller="RealEstate" asp-route-id="@Model.Id">
+                <button type="submit" class="reserve-button">
+                    Update
+                </button>
+            </form>
+            <form method="post" asp-action="Delete" asp-controller="RealEstate" asp-route-id="@Model.Id">
+                <button type="submit" class="reserve-button" style="background-color:red;color:white;">
+                    Delete
+                </button>
+            </form>
+        }
+    </div>
+
+    <!-- Image Viewer Modal -->
+    <div class="image-viewer-container" onclick="hideImageViewer()">
+        <img class="image-viewer" id="expandedImg" src="" alt="Expanded Image">
+    </div>
+
+    <script>
+        function showImageViewer(img) {
+            var modal = document.querySelector('.image-viewer-container');
+            var modalImg = document.getElementById('expandedImg');
+            modal.style.display = 'flex';
+            modalImg.src = img.src;
+        }
+
+        function hideImageViewer() {
+            var modal = document.querySelector('.image-viewer-container');
+            modal.style.display = 'none';
+        }
+
+        function updateTotalPrice() {
+            var daysInput = document.getElementById('days');
+            var totalPriceElement = document.getElementById('totalPrice');
+            var pricePerDay = @Model.Price; // You can replace this with the actual price per day
+
+            var numberOfDays = parseInt(daysInput.value) || 0;
+            var totalPrice = pricePerDay * numberOfDays;
+
+            totalPriceElement.textContent = 'Total Price: $' + totalPrice;
+        }
+
+    </script>
+
+</body>
+</html>

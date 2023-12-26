@@ -1,0 +1,112 @@
+﻿@using RealEstate.ViewModels
+@model BillViewModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Information</title>
+    <link rel="stylesheet" href="~/css/Bill.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <h1 style="margin-bottom:50px;">Bill Information</h1>
+
+        <div class="section">
+            <h2 style="color:cadetblue;margin-bottom:30px;">Owner Information</h2>
+            <div class="info">
+                <label>Name:</label>
+                <span>@Model.OwnerName</span>
+            </div>
+            <div class="info">
+                <label>Email:</label>
+                <span>@Model.OwnerEmail</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 style="color:cadetblue;margin-bottom:30px;">Customer Information</h2>
+            <div class="info">
+                <label>Name:</label>
+                <span>@Model.CustomerName</span>
+            </div>
+            <div class="info">
+                <label>Email:</label>
+                <span>@Model.CustomerEmail</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 style="color:cadetblue;margin-bottom:30px;">Real Estate Information</h2>
+            <div class="info">
+                <label>Title:</label>
+                <span>@Model.RealEstateTitle</span>
+            </div>
+            <div class="info">
+                <label>Description:</label>
+                <span>@Model.RealEstateDescription</span>
+            </div>
+            <div class="info">
+                <label>Start Reservation Date:</label>
+                <span>@Model.StartDate</span>
+            </div>
+            <div class="info">
+                <label>End Reservation Date:</label>
+                <span>@Model.EndDate</span>
+            </div>
+            <div class="info">
+                <label>Total Price</label>
+                <span>@Model.totalPrice</span>
+            </div>
+            <div class="real-estate-info">
+                <label>Main Image:</label>
+                @{
+                    var base64Img = Convert.ToBase64String(Model.MainImg);
+                    <img class="property-image" src="data:image/png;base64,@base64Img" alt="Real Estate Image" onclick="showImageViewer(this)">
+                }
+            </div>
+        </div>
+
+        <button class="download-button" onclick="downloadPDF()">Download PDF</button>
+    </div>
+
+    <script>
+        function downloadPDF() {
+            // Create a new jsPDF instance
+            const pdf = new jsPDF();
+
+            // Add content to the PDF
+            pdf.text(20, 20, 'Bill Information');
+            pdf.text(20, 30, 'Owner Information');
+            pdf.text(20, 40, 'Name: @Model.OwnerName');
+            pdf.text(20, 50, 'Email: @Model.OwnerEmail');
+
+            pdf.text(20, 70, 'Customer Information');
+            pdf.text(20, 80, 'Name: @Model.CustomerName');
+            pdf.text(20, 90, 'Email: @Model.CustomerEmail');
+
+            pdf.text(20, 110, 'Real Estate Information');
+            pdf.text(20, 120, 'Title: @Model.RealEstateTitle');
+            pdf.text(20, 130, '@Model.RealEstateDescription');
+            pdf.text(20, 140, 'Start Reservation Date: @Model.StartDate');
+            pdf.text(20, 150, 'End Reservation Date: @Model.EndDate');
+            pdf.text(20, 160, 'Total Price: @Model.totalPrice');
+
+            window.jsPDF = window.jspdf.jsPDF;
+            // Save the PDF as a blob
+            const blob = pdf.output('blob');
+
+            // Create a download link
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'bill_information.pdf';
+
+            // Trigger a click on the link to start the download
+            link.click();
+        }
+    </script>
+
+</body>
+</html>
